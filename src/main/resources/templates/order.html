@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Order Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <link th:href="@{/css/styles.css}" rel="stylesheet" />
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+</head>
+<body>
+<!--<nav class="navbar navbar-expand-md bg-dark navbar-dark">-->
+<!-- Brand -->
+<!--    <a class="navbar-brand" href="#">Student Management System</a>-->
+
+<!-- Toggler/collapsibe Button -->
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+    <span class="navbar-toggler-icon"></span>
+</button>
+<nav class="navbar navbar-expand-lg navbar-light bg-light" style="top:-30px">
+    <div class="container px-4 px-lg-5">
+        <a class="navbar-brand" th:href="@{shop-home}">Shop Bootstrap</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                <li class="nav-item"><a class="nav-link active" aria-current="page" th:href="@{shop-home}">Home</a></li>
+                <li class="nav-item"><a class="nav-link " aria-current="page" th:href="@{/employees}">Employee</a></li>
+                <li class="nav-item"><a class="nav-link " aria-current="page" th:href="@{/orders}">Order</a></li>
+                <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="#!">All Products</a></li>
+                        <li><hr class="dropdown-divider" /></li>
+                        <li><a class="dropdown-item" href="#!">Popular Items</a></li>
+                        <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <form class="d-flex" th:action="@{shop-cart}">
+                <button class="btn btn-outline-dark" type="submit" >
+                    <i class="bi-cart-fill me-1"></i>
+                    Cart
+                    <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<!-- Navbar links -->
+<!--    <div class="collapse navbar-collapse" id="collapsibleNavbar">-->
+<!--        <ul class="navbar-nav">-->
+<!--            <li class="nav-item">-->
+<!--                <a class="nav-link" th:href="@{/students}">Student Management</a>-->
+<!--            </li>-->
+<!--            <li class="nav-item">-->
+<!--                <a class="nav-link" th:href="@{/students}">Teacher Management</a>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--    </div>-->
+</nav>
+
+<div class ="container">
+    <div class = "row">
+        <h1> List Orders </h1>
+    </div>
+
+    <div class = "row">
+        <div class = "col-lg-2">
+            <a th:href = "@{/orders/new}" class = "btn btn-primary btn-sm mb-3"> Add Student</a>
+
+        </div>
+        <div class = "col-lg-6">
+            <form id="orderDateForm" action="/orders/order-interval" method="get">
+                <label for="startDate">From Date:</label>
+                <input type="date" id="startDate" name="startDate"     th:value="${startDate}">
+                <label for="startDate1">To Date:</label>
+                <input type="date" id="startDate1" name="toDate"   th:value="${endDateTime}" >
+            </form>
+            <script>
+                document.getElementById('startDate').addEventListener('change', function() {
+                    document.getElementById('orderDateForm').submit();
+                });
+            </script>
+        </div>
+
+        <div class = "col-lg-4">
+            <form action="/orders/search-employeeID" method="get">
+             <input type="text" name="inputSearch" required>
+                <button style="top:-40px;left: 200px" type="submit"  value="Search">Search</button>
+            </form>
+        </div>
+
+    </div>
+<!--    <div class = "row">-->
+<!--        <div class = "col-lg-1">-->
+<!--            <form id="orderDateForm2" action="/orders/order-date" method="get">-->
+<!--                <label for="startDate2">To Date:</label>-->
+<!--                <input type="date" id="startDate2" name="startDate" required>-->
+<!--            </form>-->
+<!--        </div>-->
+
+<!--        <div class = "col-lg-1">-->
+<!--            <a th:href = "@{/orders/new}" class = "btn btn-primary btn-sm mb-3"> Add Student</a>-->
+
+<!--        </div>-->
+<!--    </div>-->
+
+
+    <table class = "table table-striped table-bordered">
+        <thead class = "table-dark">
+        <!--        String fullname, LocalDate dob, String email, String phone, String address, EmployeeStatus status-->
+        <tr>
+
+            <th> order_id</th>
+            <th> orderDate</th>
+            <th>Employee Name</th>
+            <th>Customer  </th>
+            <th> Action </th>
+
+
+        </tr>
+        </thead>
+
+
+        <tbody>
+        <tr th:each = "order: ${orders}">
+            <td th:text = "${order.getOrder_id}"></td>
+            <td th:text = "${order.getOrderDate}"></td>
+            <td th:text = "${order.getEmployee().getFullname()}"></td>
+            <td th:text = "${order.getCustomer().getId()}"></td>
+
+
+            <td>
+                <a th:href = "@{/orders/edit/{id}(id=${order.getOrder_id()})}"
+                   class = "btn btn-primary">Update</a>
+
+                <a th:href = "@{/orders/{id}(id=${order.getOrder_id()})}"
+                   class = "btn btn-danger">Delete</a>
+
+            </td>
+        </tr>
+        </tbody>
+
+    </table>
+
+
+</div>
+</body>
+</html>
